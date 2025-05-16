@@ -12,7 +12,7 @@ from .utils.internal_comment import load_internal_comment, save_internal_comment
 
 app = FastAPI()
 
-# Health‐check endpoint at “/” to avoid 404 on HEAD/GET /
+# Health‑check endpoint at “/” to avoid 404 on HEAD/GET /
 @app.get("/")
 def root():
     return {"status": "OK", "message": "Wiserbond API is running"}
@@ -56,8 +56,7 @@ def generate(report: ReportRequest):
 # 내부 코멘트 로드용 엔드포인트
 @app.get("/load_internal_comment")
 def get_internal_comment():
-    comment = load_internal_comment()
-    return {"comment": comment}
+    return {"comment": load_internal_comment()}
 
 # 내부 코멘트 저장용 엔드포인트
 @app.post("/save_internal_comment")
