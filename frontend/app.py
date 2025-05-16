@@ -25,7 +25,7 @@ st.subheader("Add Your Interpretation and Forecast")
 
 email = st.text_input("Your Email (e.g., jamie@wiserbond.com)")
 comment = st.text_area("Your Interpretation")
-prediction = st.text_input("Your Forecast (What will happen in 3 months?)")
+prediction = st.text_area("Your Forecast (What will happen in 3 months?)")
 
 if st.button("Submit"):
     if not email:
