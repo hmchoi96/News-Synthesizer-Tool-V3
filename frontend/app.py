@@ -7,7 +7,7 @@ st.set_page_config(page_title="Wiserbond Report", layout="wide")
 st.title("Wiserbond Macro Impact Synthesizer")
 # ✅ 사용자에게 자연어형 문장으로 질문 의도 전달
 st.markdown(
-    "#### This tool tells how a macro topic affects an industry in a country, written in your preferred language."
+    "#### This tool tells how a macro topic affects an industry in a country, explained in your preferred language."
 )
 # --- 사용자 입력 ---
 topic = st.text_input("Macro Topic - Type a macro topic and press Enter (ex, Inflation)", value="Inflation")
