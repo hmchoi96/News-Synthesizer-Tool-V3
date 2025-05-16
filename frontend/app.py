@@ -59,7 +59,7 @@ if st.button("Generate Report"):
 # --- 사용자 분석&예측 입력 ---
 st.markdown("---")
 st.subheader("Add Your Interpretation and Forecast")
-
+st.markdown("Let us learn from you.")
 email = st.text_input("Your Email (e.g., jamie@wiserbond.com)")
 comment = st.text_area("Your Interpretation")
 prediction = st.text_area("Your Forecast (What will happen in 3 months?)")
