@@ -93,37 +93,3 @@ if st.button("Generate Report"):
             st.write(result["interpretation"])
         else:
             st.error("API Error: Could not generate report.")
-
-
-# --- 사용자 분석&예측 입력 ---
-st.markdown("---")
-st.subheader("Add Your Interpretation and Forecast")
-st.markdown("Let us learn from you.")
-email = st.text_input("Your Email (e.g., jamie@wiserbond.com)")
-user_analysis = st.text_area("Your Interpretation")
-user_forecast = st.text_area("Your Forecast (What will happen in 3 months?)")
-
-if st.button("Submit"):
-    if not email:
-        st.warning("Please enter your email.")
-    elif not user_analysis and not user_forecast:
-        st.warning("Please provide either an interpretation or a forecast.")
-    else:
-        payload = {
-            "email": email,
-            "topic": topic,
-            "industry": industry,
-            "country": country,
-            "user_analysis": user_analysis,
-            "user_forecast": user_forecast,
-        }
-
-        try:
-            res = requests.post("https://wiserbond-synthesizerv3.onrender.com/submit-feedback", json=payload)
-            if res.status_code == 200:
-                st.success("✅ Your input has been saved. Thank you!")
-            else:
-                st.error("⚠️ Server responded with an error.")
-        except Exception as e:
-            st.error(f"❌ Error occurred while submitting: {e}")
-
