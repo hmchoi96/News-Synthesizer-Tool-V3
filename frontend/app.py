@@ -57,6 +57,7 @@ if st.button("Submit"):
 
 
 # --- 실행 ---
+st.markdown("---")
 if st.button("Generate Report"):
     with st.spinner("Wiserbond is analyzing with AI..."):
         response = requests.post(
