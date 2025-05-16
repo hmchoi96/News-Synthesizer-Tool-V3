@@ -18,38 +18,6 @@ language = st.selectbox("Output Language", ["English", "한국어", "Español", 
 # --- 내부 분석자 입력 (개발자만 보게끔) ---
 with st.expander("🔒 Internal Analyst Comment (Developer Only)", expanded=False):
     user_comment = st.text_area("Enter your interpretation or analyst comment", height=100)
-# --- 사용자 분석&예측 입력 ---
-
-st.markdown("---")
-st.subheader("Add Your Interpretation and Forecast")
-
-email = st.text_input("Your Email (e.g., jamie@wiserbond.com)")
-comment = st.text_area("Your Interpretation")
-prediction = st.text_area("Your Forecast (What will happen in 3 months?)")
-
-if st.button("Submit"):
-    if not email:
-        st.warning("Please enter your email.")
-    elif not comment and not prediction:
-        st.warning("Please provide either an interpretation or a forecast.")
-    else:
-        payload = {
-            "email": email,
-            "topic": topic,
-            "industry": industry,
-            "country": country,
-            "comment": comment,
-            "prediction": prediction,
-        }
-
-        try:
-            res = requests.post("https://wiserbond-synthesizerv3.onrender.com/submit-feedback", json=payload)
-            if res.status_code == 200:
-                st.success("✅ Your input has been saved. Thank you!")
-            else:
-                st.error("⚠️ Server responded with an error.")
-        except Exception as e:
-            st.error(f"❌ Error occurred while submitting: {e}")
 
 
 # --- 실행 ---
@@ -86,3 +54,37 @@ if st.button("Generate Report"):
             st.write(result["interpretation"])
         else:
             st.error("API Error: Could not generate report.")
+
+
+# --- 사용자 분석&예측 입력 ---
+st.markdown("---")
+st.subheader("Add Your Interpretation and Forecast")
+
+email = st.text_input("Your Email (e.g., jamie@wiserbond.com)")
+comment = st.text_area("Your Interpretation")
+prediction = st.text_area("Your Forecast (What will happen in 3 months?)")
+
+if st.button("Submit"):
+    if not email:
+        st.warning("Please enter your email.")
+    elif not comment and not prediction:
+        st.warning("Please provide either an interpretation or a forecast.")
+    else:
+        payload = {
+            "email": email,
+            "topic": topic,
+            "industry": industry,
+            "country": country,
+            "comment": comment,
+            "prediction": prediction,
+        }
+
+        try:
+            res = requests.post("https://wiserbond-synthesizerv3.onrender.com/submit-feedback", json=payload)
+            if res.status_code == 200:
+                st.success("✅ Your input has been saved. Thank you!")
+            else:
+                st.error("⚠️ Server responded with an error.")
+        except Exception as e:
+            st.error(f"❌ Error occurred while submitting: {e}")
+
