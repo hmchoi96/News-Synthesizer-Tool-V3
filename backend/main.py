@@ -13,7 +13,7 @@ app = FastAPI()
 # --- (선택) CORS 설정: 프론트에서 호출 가능하도록 허용
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 프로덕션 시엔 도메인 제한하는 게 좋음
+    allow_origins=["https://wiserbond-streamlit.onrender.com"],  # 프로덕션 시엔 도메인 제한하는 게 좋음
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -25,7 +25,11 @@ class ReportRequest(BaseModel):
     industry: str
     country: str
     language: str = "English"
-    user_comment: str = ""
+    internal_comment: str = ""
+    user_forecast: str = ""
+    user_analysis: str = ""
+    is_pro: bool = False
+
 
 # --- 메인 API 엔드포인트
 @app.post("/generate_report")
@@ -35,42 +39,24 @@ def generate_report(data: ReportRequest):
         industry=data.industry,
         country=data.country,
         language=data.language,
-        user_comment=data.user_comment
+        internal_comment=data.internal_comment,
+        user_forecast=data.user_forecast,
+        user_analysis=data.user_analysis,
+        is_pro=data.is_pro
     )
     return result
 
-# --- CORS 설정
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# --- 리포트 요청 형식
-class ReportRequest(BaseModel):
+# ✅ 유저 피드백 입력 스키마
+class FeedbackInput(BaseModel):
+    email: str
     topic: str
     industry: str
     country: str
-    language: str = "English"
-    user_comment: str = ""
-
-# --- 리포트 생성 API
-@app.post("/generate_report")
-def generate_report(data: ReportRequest):
-    result = generate_full_report(
-        topic=data.topic,
-        industry=data.industry,
-        country=data.country,
-        language=data.language,
-        user_comment=data.user_comment
-    )
-    return result
+    user_forecast: str
+    user_analysis: str
 
 # ✅ 유저 피드백 저장 API
 @app.post("/submit-feedback")
-def submit_feedback(data: FeedbackRequest):
-    save_user_feedback(data.dict())
-    return {"status": "success"}
-
+def submit_feedback(data: FeedbackInput):
+    save_user_feedback(data)
+    return {"status": "success", "message": "User feedback saved."}
