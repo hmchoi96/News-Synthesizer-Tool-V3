@@ -35,6 +35,8 @@ if st.button("Generate Report"):
                 "country": country,
                 "language": language,
                 "internal_comment": internal_comment,
+                "user_forecast": user_forecast,     # ✅ 추가
+                "user_analysis": user_analysis,     # ✅ 추가
                 "is_pro": is_pro
             }
         )
