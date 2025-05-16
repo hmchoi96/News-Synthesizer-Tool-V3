@@ -20,7 +20,7 @@ language = st.selectbox("Output Language", ["English", "한국어", "Español", 
 
 # --- 내부 분석자 입력 (개발자만 보게끔) ---
 with st.expander("🔒 Internal Analyst Comment (Developer Only)", expanded=False):
-    user_comment = st.text_area("Enter your interpretation or analyst comment", height=100)
+    internal_comment = st.text_area("Enter your interpretation or analyst comment", height=100)
 
 
 # --- 실행 ---
@@ -34,7 +34,8 @@ if st.button("Generate Report"):
                 "industry": industry,
                 "country": country,
                 "language": language,
-                "user_comment": user_comment
+                "internal_comment": internal_comment,
+                "is_pro": is_pro
             }
         )
 
@@ -64,13 +65,13 @@ st.markdown("---")
 st.subheader("Add Your Interpretation and Forecast")
 st.markdown("Let us learn from you.")
 email = st.text_input("Your Email (e.g., jamie@wiserbond.com)")
-comment = st.text_area("Your Interpretation")
-prediction = st.text_area("Your Forecast (What will happen in 3 months?)")
+user_analysis = st.text_area("Your Interpretation")
+user_forecast = st.text_area("Your Forecast (What will happen in 3 months?)")
 
 if st.button("Submit"):
     if not email:
         st.warning("Please enter your email.")
-    elif not comment and not prediction:
+    elif not user_analysis and not user_forecast:
         st.warning("Please provide either an interpretation or a forecast.")
     else:
         payload = {
@@ -78,8 +79,8 @@ if st.button("Submit"):
             "topic": topic,
             "industry": industry,
             "country": country,
-            "comment": comment,
-            "prediction": prediction,
+            "user_analysis": user_analysis,
+            "user_forecast": user_forecast,
         }
 
         try:
