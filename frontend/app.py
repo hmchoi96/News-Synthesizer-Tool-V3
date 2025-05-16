@@ -13,8 +13,8 @@ st.markdown(
 topic = st.text_input("Macro Topic - Type a macro topic and press Enter (ex, Inflation)", value="Inflation")
 industry = st.text_input("Industry or Sector - Type an industry/sector and press Enter (ex, Supply Chain)", value="Supply Chain")
 # Industry-specific tone option
-st.markdown("#### Optional:")
-is_pro = st.checkbox("This is my industry (I know better)")
+st.markdown("#### Optional - pro mode: if checked, the output should use more technical, domain-specific language tailored for professionals.")
+is_pro = st.checkbox("Pro mode (I know this industry well)")
 country = st.text_input("Country - Type a country and press Enter (ex, Canada)", value="Canada")
 language = st.selectbox("Output Language", ["English", "한국어", "Español", "Chinese", "Hindi"])
 
