@@ -1,12 +1,18 @@
-def get_big_picture_prompt(topic: str, industry: str, country: str, current_date: str, language: str) -> str:
+def get_big_picture_prompt(topic: str, industry: str, country: str, current_date: str, language: str, is_pro: bool = False) -> str:
+    tone_instruction = (
+        "Use technical, domain-specific language relevant to professionals in the selected industry. "
+        "Avoid oversimplified explanations. Assume the reader is familiar with industry terminology."
+        if is_pro else
+        "Use clear, easy-to-understand language suitable for non-experts. Explain terms where necessary."
+    )
     return f"""
 Analyze how the selected macroeconomic topic or event affects the {industry} sector in {country} from a long-term institutional perspective.
 
 Use only high-credibility sources such as:
-- Central banks (e.g., Bank of Canada, FED, ECB)
-- National banks (e.g., TD, Scotiabank, BMO)
+- Central banks in {country} (e.g., Bank of Canada, FED, ECB)
+- National banks in {country} (e.g., TD, Scotiabank, BMO)
 - International institutions (IMF, OECD)
-- Government statistical agencies (e.g., Statistics Canada)
+- Government statistical agencies in {country} (e.g., Statistics Canada)
 
 Your response must:
 - The entire output must be written in {language}, which is selected by the user. Do not answer in English unless English is the selected language.
