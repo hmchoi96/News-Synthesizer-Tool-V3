@@ -1,10 +1,18 @@
-def get_mid_picture_prompt(topic: str, industry: str, country: str, current_date: str, language: str) -> str:
+def get_mid_picture_prompt(topic: str, industry: str, country: str, current_date: str, language: str,is_pro: bool = False
+    ) -> str:
+    tone_instruction = (
+        "Use technical, domain-specific language relevant to professionals in the selected industry. "
+        "Avoid oversimplified explanations. Assume the reader is familiar with industry terminology."
+        if is_pro else
+        "Use clear, easy-to-understand language suitable for non-experts. Explain terms where necessary."
+    )
+
     return f"""
 Analyze how the macroeconomic topic '{topic}' has affected the {industry} sector in {country} over the past quarter or month.
 
 Use reliable sources such as:
-- Consulting firms (Deloitte, BCG, McKinsey, etc.)
-- Bank and industry reports
+- Consulting firms (Deloitte, BCG, McKinsey, Bain& etc.)
+- Bank and industry reports in {country}
 - Trade association publications
 - Economic think tanks
 
