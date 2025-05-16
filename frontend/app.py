@@ -26,9 +26,10 @@ with st.expander("🔒 Internal Analyst Comment (Developer Only)", expanded=Fals
 st.markdown("---")
 st.subheader("Add Your Interpretation and Forecast")
 st.markdown("Let us learn from you.")
-email = st.text_input("Your Email (e.g., jamie@wiserbond.com)")
-user_analysis = st.text_area("Your Interpretation")
-user_forecast = st.text_area("Your Forecast (What will happen in 3 months?)")
+with st.expander("✍️ Submit Your Forecast", expanded=False):
+    email = st.text_input("Your Email (e.g., jamie@wiserbond.com)")
+    user_analysis = st.text_area("Your Interpretation")
+    user_forecast = st.text_area("Your Forecast (What will happen in 3 months?)")
 
 if st.button("Submit"):
     if not email:
