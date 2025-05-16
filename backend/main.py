@@ -1,25 +1,35 @@
-# backend/main.py
+# File: backend/main.py
+# Path: /backend/main.py
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from .chains.generate_report import generate_full_report
-# ✅ 새로 추가
 from .models.feedback_model import FeedbackRequest
 from .utils.save_user_feedback import save_user_feedback
+from .utils.internal_comment import load_internal_comment, save_internal_comment
+
 app = FastAPI()
 
+# 1) 루트 엔드포인트 추가
+@app.get("/")
+def root():
+    return {"status": "OK", "message": "Wiserbond API is running"}
 
-# --- (선택) CORS 설정: 프론트에서 호출 가능하도록 허용
+# 2) CORS 설정: 개발 및 배포 환경에 맞춰 origin 추가
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://wiserbond-streamlit.onrender.com"],  # 프로덕션 시엔 도메인 제한하는 게 좋음
+    allow_origins=[
+        "https://wiserbond-streamlit.onrender.com",
+        "https://wiserbond-synthesizerv3.onrender.com",
+        "http://localhost:10000"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# --- 리포트 요청 형식 정의
+# --- 리포트 요청 형식 정의 ---
 class ReportRequest(BaseModel):
     topic: str
     industry: str
@@ -28,35 +38,32 @@ class ReportRequest(BaseModel):
     internal_comment: str = ""
     user_forecast: str = ""
     user_analysis: str = ""
-    is_pro: bool = False
 
-
-# --- 메인 API 엔드포인트
-@app.post("/generate_report")
-def generate_report(data: ReportRequest):
+@app.post("/generate")
+def generate(report: ReportRequest):
     result = generate_full_report(
-        topic=data.topic,
-        industry=data.industry,
-        country=data.country,
-        language=data.language,
-        internal_comment=data.internal_comment,
-        user_forecast=data.user_forecast,
-        user_analysis=data.user_analysis,
-        is_pro=data.is_pro
+        topic=report.topic,
+        industry=report.industry,
+        country=report.country,
+        language=report.language,
+        user_comment=report.internal_comment,
+        is_pro=False
     )
-    return result
+    return {"report": result}
 
-# ✅ 유저 피드백 입력 스키마
-class FeedbackInput(BaseModel):
-    email: str
-    topic: str
-    industry: str
-    country: str
-    user_forecast: str
-    user_analysis: str
+# --- 내부 코멘트 로드/저장용 엔드포인트 추가 ---
+@app.get("/load_internal_comment")
+def get_internal_comment():
+    comment = load_internal_comment()
+    return {"comment": comment}
 
-# ✅ 유저 피드백 저장 API
-@app.post("/submit-feedback")
-def submit_feedback(data: FeedbackInput):
-    save_user_feedback(data)
-    return {"status": "success", "message": "User feedback saved."}
+@app.post("/save_internal_comment")
+def post_internal_comment(payload: dict = Body(...)):
+    save_internal_comment(payload.get("comment", ""))
+    return {"status": "success"}
+
+# --- 사용자 피드백 저장 엔드포인트 ---
+@app.post("/feedback")
+def feedback(feedback: FeedbackRequest):
+    save_user_feedback(feedback)
+    return {"status": "saved"}
