@@ -9,8 +9,14 @@ def get_executive_summary_prompt(
     big_picture: str,
     mid_picture: str,
     small_picture: str,
-    interpretation: str
-) -> str:
+    interpretation: str,
+    is_pro: bool = False) -> str:
+    tone_instruction = (
+        "Use technical, domain-specific language relevant to professionals in the selected industry. "
+        "Avoid oversimplified explanations. Assume the reader is familiar with industry terminology."
+        if is_pro else
+        "Use clear, easy-to-understand language suitable for non-experts. Explain terms where necessary."
+    )
     return f"""
 Generate a concise executive summary as of {current_date}, based on the following multi-level analysis of the macroeconomic topic '{topic}' and its impact on the {industry} sector in {country}.
 
