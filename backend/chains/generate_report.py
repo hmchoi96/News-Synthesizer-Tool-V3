@@ -5,7 +5,7 @@ def generate_full_report(
     industry,
     country,
     language="English",
-    user_comment="",
+    internal_comment="",
     user_forecast="",
     user_analysis="",
     is_pro=False
@@ -18,7 +18,7 @@ def generate_full_report(
     from backend.utils.gpt_api import call_gpt
     from backend.utils.internal_comment import load_internal_comment
 
-    final_comment = user_comment if user_comment else load_internal_comment()
+    final_comment = internal_comment if internal_comment else load_internal_comment()
     current_date = datetime.today().strftime("%Y-%m-%d")
 
     # 1. Big Picture
@@ -42,7 +42,7 @@ def generate_full_report(
         big_picture=big_result,
         mid_picture=mid_result,
         small_picture=small_result,
-        user_comment=final_comment,
+        internal_comment=final_comment,
         user_forecast=user_forecast,
         user_analysis=user_analysis,
         language=language,
