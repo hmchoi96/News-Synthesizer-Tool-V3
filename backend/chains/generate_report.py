@@ -1,6 +1,15 @@
 from datetime import datetime
 
-def generate_full_report(topic, industry, country, language="English", user_comment="", is_pro=False):
+def generate_full_report(
+    topic,
+    industry,
+    country,
+    language="English",
+    user_comment="",
+    user_forecast="",
+    user_analysis="",
+    is_pro=False
+):
     from backend.prompts.big_picture import get_big_picture_prompt
     from backend.prompts.mid_picture import get_mid_picture_prompt
     from backend.prompts.small_picture import get_small_picture_prompt
@@ -34,6 +43,8 @@ def generate_full_report(topic, industry, country, language="English", user_comm
         mid_picture=mid_result,
         small_picture=small_result,
         user_comment=final_comment,
+        user_forecast=user_forecast,
+        user_analysis=user_analysis,
         language=language,
         is_pro=is_pro
     )
