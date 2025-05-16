@@ -21,7 +21,7 @@ with st.expander("🔒 Internal Analyst Comment (Developer Only)", expanded=Fals
 
 # --- 실행 ---
 if st.button("Generate Report"):
-    with st.spinner("Analyzing with AI..."):
+    with st.spinner("Wiserbond is analyzing with AI..."):
         response = requests.post(
             "http://localhost:8000/generate_report",  # FastAPI 서버 URL
             json={
