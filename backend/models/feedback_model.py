@@ -7,5 +7,5 @@ class FeedbackRequest(BaseModel):
     topic: str
     industry: str
     country: str
-    comment: str
-    prediction: str
+    user_analysis: str
+    user_forecast: str
