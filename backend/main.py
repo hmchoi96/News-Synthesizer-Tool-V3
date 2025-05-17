@@ -45,7 +45,7 @@ class ReportRequest(BaseModel):
 
 
 # 3) 리포트 생성 엔드포인트 (에러 로깅 포함)
-@app.post("/generate")
+@app.post("/generate_report")
 def generate(report: ReportRequest):
     try:
         result = generate_full_report(
