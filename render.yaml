@@ -7,4 +7,4 @@ services:
     plan: free
     envVars:
       - key: OPENAI_API_KEY
-        value: your_openai_api_key_here
+        sync: false  # Render에서 직접 관리함을 의미
