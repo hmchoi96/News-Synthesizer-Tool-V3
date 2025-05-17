@@ -1,7 +1,7 @@
 # File: backend/main.py
 # Path: /backend/main.py
 
-from fastapi import FastAPI, Body, HTTPException
+from fastapi import FastAPI, Body, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import traceback
@@ -18,7 +18,7 @@ app = FastAPI()
 def root():
     return {"status": "OK", "message": "Wiserbond API is running"}
 
-# 2) CORS 설정: 로컬(8501,10000)과 배포 도메인 허용
+# 2) CORS 설정
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -32,7 +32,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ReportRequest 스키마
+# 3) 요청 데이터 스키마
 class ReportRequest(BaseModel):
     topic: str
     industry: str
@@ -43,11 +43,14 @@ class ReportRequest(BaseModel):
     user_analysis: str = ""
     is_pro: bool = False
 
-
-# 3) 리포트 생성 엔드포인트 (에러 로깅 포함)
+# 4) 보고서 생성 API
 @app.post("/generate_report")
-def generate(report: ReportRequest):
+async def generate(report: ReportRequest, request: Request):
     try:
+        print("✅ /generate_report 요청 도착")
+        print("📦 요청 body (raw):", await request.body())
+        print("📌 파싱된 ReportRequest:", report.dict())
+
         result = generate_full_report(
             topic=report.topic,
             industry=report.industry,
@@ -59,14 +62,15 @@ def generate(report: ReportRequest):
             is_pro=report.is_pro
         )
 
+        print("✅ 보고서 생성 완료")
         return {"report": result}
     except Exception as e:
-        # 콘솔에 스택트레이스 찍기
+        print("❌ 예외 발생:")
         traceback.print_exc()
-        # 클라이언트에 상태 코드 500과 상세 메시지 전달
+        print("🔍 예외 내용:", str(e))
         raise HTTPException(status_code=500, detail=f"Error generating report: {e}")
 
-# 4) 내부 코멘트 로드/저장
+# 5) 내부 분석자 코멘트 로드/저장
 @app.get("/load_internal_comment")
 def get_internal_comment():
     return {"comment": load_internal_comment()}
@@ -76,7 +80,7 @@ def post_internal_comment(payload: dict = Body(...)):
     save_internal_comment(payload.get("comment", ""))
     return {"status": "success"}
 
-# 5) 사용자 피드백 저장
+# 6) 사용자 피드백 저장
 @app.post("/submit-feedback")
 def feedback(feedback: FeedbackRequest):
     save_user_feedback(feedback)
