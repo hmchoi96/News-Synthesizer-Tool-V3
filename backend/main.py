@@ -54,8 +54,11 @@ def generate(report: ReportRequest):
             country=report.country,
             language=report.language,
             internal_comment=report.internal_comment,
-            is_pro=False
+            user_forecast=report.user_forecast,
+            user_analysis=report.user_analysis,
+            is_pro=report.is_pro
         )
+
         return {"report": result}
     except Exception as e:
         # 콘솔에 스택트레이스 찍기
