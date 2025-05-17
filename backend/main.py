@@ -51,7 +51,7 @@ def generate(report: ReportRequest):
             industry=report.industry,
             country=report.country,
             language=report.language,
-            user_comment=report.internal_comment,
+            internal_comment=report.internal_comment,
             is_pro=False
         )
         return {"report": result}
