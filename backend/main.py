@@ -41,6 +41,8 @@ class ReportRequest(BaseModel):
     internal_comment: str = ""
     user_forecast: str = ""
     user_analysis: str = ""
+    is_pro: bool = False
+
 
 # 3) 리포트 생성 엔드포인트 (에러 로깅 포함)
 @app.post("/generate")
