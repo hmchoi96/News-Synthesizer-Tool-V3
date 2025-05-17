@@ -77,7 +77,7 @@ def post_internal_comment(payload: dict = Body(...)):
     return {"status": "success"}
 
 # 5) 사용자 피드백 저장
-@app.post("/feedback")
+@app.post("/submit-feedback")
 def feedback(feedback: FeedbackRequest):
     save_user_feedback(feedback)
     return {"status": "saved"}
