@@ -1,6 +1,4 @@
-# File: backend/main.py
-# Path: /backend/main.py
-
+# File: main.py
 from fastapi import FastAPI, Body, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
