@@ -1,22 +1,21 @@
-# backend/utils/gpt_api.py
-
 import os
-from openai import OpenAI
-from dotenv import load_dotenv
+import openai
 
-load_dotenv()
+# 1) 시스템 환경 변수에서 OPENAI_API_KEY 읽기
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=OPENAI_API_KEY)
+if not OPENAI_API_KEY:
+    raise ValueError("환경 변수 OPENAI_API_KEY가 설정되지 않았습니다.")
 
-def call_gpt(prompt: str, model: str = "gpt-4o", temperature: float = 0.7) -> str:
-    try:
-        response = client.chat.completions.create(
-            model=model,
-            messages=[
-                {"role": "user", "content": prompt}
-            ],
-            temperature=temperature
-        )
-        return response.choices[0].message.content.strip()
-    except Exception as e:
-        return f"❌ GPT 호출 실패: {e}"
+# 2) OpenAI 클라이언트에 키 등록
+openai.api_key = OPENAI_API_KEY
+
+def call_gpt(prompt: str, model: str = "gpt-4o") -> str:
+    """
+    GPT 모델에 프롬프트를 보내고 응답 텍스트를 반환합니다.
+    """
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=[{"role": "user", "content": prompt}],
+        # temperature, max_tokens 등 추가 옵션 가능
+    )
+    return response.choices[0].message.content
