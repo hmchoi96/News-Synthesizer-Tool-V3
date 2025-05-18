@@ -81,7 +81,12 @@ def post_internal_comment(payload: dict = Body(...)):
     return {"status": "success"}
 
 # 6) 사용자 피드백 저장
-@app.post("/submit-feedback")
-def feedback(feedback: FeedbackRequest):
-    save_user_feedback(feedback)
-    return {"status": "saved"}
++ @app.post("/submit-feedback")
++ def feedback(feedback: FeedbackRequest):
++     # Pydantic 모델을 dict로 변환
++     fb = feedback.dict()
++     # 타임스탬프 추가
++     from datetime import datetime
++     fb["timestamp"] = datetime.utcnow().isoformat()
++     save_user_feedback(fb)
++     return {"status": "saved"}
