@@ -3,7 +3,7 @@
 import json
 import os
 
-FILE_PATH = "backend/config/internal_comment.json"
+FILE_PATH = "backend/data/internal_comment.json"
 
 def save_internal_comment(text: str):
     os.makedirs(os.path.dirname(FILE_PATH), exist_ok=True)
