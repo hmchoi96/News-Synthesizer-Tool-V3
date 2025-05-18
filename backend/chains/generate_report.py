@@ -66,9 +66,9 @@ def generate_full_report(
     executive_result = call_gpt(prompt=exec_prompt, model="gpt-4o")
 
     return {
-        "executive_summary": executive_result,
+      #  "executive_summary": executive_result,
         "big_picture": big_result,
         "mid_picture": mid_result,
         "small_picture": small_result,
-        "interpretation": interpretation_result
+       # "interpretation": interpretation_result
     }
