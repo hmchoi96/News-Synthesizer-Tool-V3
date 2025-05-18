@@ -1,8 +1,6 @@
-# File: main.py
 from fastapi import FastAPI, Body, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import traceback
 
 from backend.chains.generate_report import generate_full_report
 from backend.models.feedback_model import FeedbackRequest
@@ -11,12 +9,7 @@ from backend.utils.internal_comment import load_internal_comment, save_internal_
 
 app = FastAPI()
 
-# 1) 헬스체크용 엔드포인트
-@app.get("/")
-def root():
-    return {"status": "OK", "message": "Wiserbond API is running"}
-
-# 2) CORS 설정
+# CORS 설정
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -30,7 +23,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 3) 요청 데이터 스키마
+# 요청 데이터 스키마
 class ReportRequest(BaseModel):
     topic: str
     industry: str
@@ -41,13 +34,12 @@ class ReportRequest(BaseModel):
     user_analysis: str = ""
     is_pro: bool = False
 
-# 4) 보고서 생성 API
+# 보고서 생성 API
 @app.post("/generate_report")
 async def generate(report: ReportRequest, request: Request):
+    debug_trace = []
     try:
-        print("✅ /generate_report 요청 도착")
-        print("📦 요청 body (raw):", await request.body())
-        print("📌 파싱된 ReportRequest:", report.dict())
+        debug_trace.append("🚨 진입 성공")
 
         result = generate_full_report(
             topic=report.topic,
@@ -57,18 +49,25 @@ async def generate(report: ReportRequest, request: Request):
             internal_comment=report.internal_comment,
             user_forecast=report.user_forecast,
             user_analysis=report.user_analysis,
-            is_pro=report.is_pro
+            is_pro=report.is_pro,
+            debug_log=debug_trace  # 전달
         )
 
-        print("✅ 보고서 생성 완료")
-        return {"report": result}
-    except Exception as e:
-        print("❌ 예외 발생:")
-        traceback.print_exc()
-        print("🔍 예외 내용:", str(e))
-        raise HTTPException(status_code=500, detail=f"Error generating report: {e}")
+        debug_trace.append("✅ generate_full_report 종료")
 
-# 5) 내부 분석자 코멘트 로드/저장
+        return {
+            "report": result,
+            "debug": debug_trace
+        }
+    except Exception as e:
+        debug_trace.append(f"❌ 예외 발생: {str(e)}")
+        return {
+            "error": str(e),
+            "debug": debug_trace,
+            "detail": "❌ /generate_report 내부에서 예외 발생"
+        }
+
+# 내부 분석자 코멘트 로드/저장
 @app.get("/load_internal_comment")
 def get_internal_comment():
     return {"comment": load_internal_comment()}
@@ -78,12 +77,10 @@ def post_internal_comment(payload: dict = Body(...)):
     save_internal_comment(payload.get("comment", ""))
     return {"status": "success"}
 
-# 6) 사용자 피드백 저장
+# 사용자 피드백 저장
 @app.post("/submit-feedback")
 def feedback(feedback: FeedbackRequest):
-    # Pydantic 모델을 dict로 변환
     fb = feedback.dict()
-    # 타임스탬프 추가
     from datetime import datetime
     fb["timestamp"] = datetime.utcnow().isoformat()
     save_user_feedback(fb)
