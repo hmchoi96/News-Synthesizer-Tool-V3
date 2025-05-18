@@ -6,10 +6,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import traceback
 
-from .chains.generate_report import generate_full_report
-from .models.feedback_model import FeedbackRequest
-from .utils.save_user_feedback import save_user_feedback
-from .utils.internal_comment import load_internal_comment, save_internal_comment
+from backend.chains.generate_report import generate_full_report
+from backend.models.feedback_model import FeedbackRequest
+from backend.utils.save_user_feedback import save_user_feedback
+from backend.utils.internal_comment import load_internal_comment, save_internal_comment
 
 app = FastAPI()
 
@@ -81,12 +81,12 @@ def post_internal_comment(payload: dict = Body(...)):
     return {"status": "success"}
 
 # 6) 사용자 피드백 저장
-+ @app.post("/submit-feedback")
-+ def feedback(feedback: FeedbackRequest):
-+     # Pydantic 모델을 dict로 변환
-+     fb = feedback.dict()
-+     # 타임스탬프 추가
-+     from datetime import datetime
-+     fb["timestamp"] = datetime.utcnow().isoformat()
-+     save_user_feedback(fb)
-+     return {"status": "saved"}
+@app.post("/submit-feedback")
+def feedback(feedback: FeedbackRequest):
+    # Pydantic 모델을 dict로 변환
+    fb = feedback.dict()
+    # 타임스탬프 추가
+    from datetime import datetime
+    fb["timestamp"] = datetime.utcnow().isoformat()
+    save_user_feedback(fb)
+    return {"status": "saved"}
