@@ -1,31 +1,29 @@
-# frontend/app.py
-
 import streamlit as st
 import requests
 
 st.set_page_config(page_title="Wiserbond Report", layout="wide")
 st.title("Wiserbond Macro Impact Synthesizer")
-# ✅ 사용자에게 자연어형 문장으로 질문 의도 전달
-st.markdown(
-    "#### This tool tells how a macro topic affects an industry in a country, explained in your preferred language."
-)
-# --- 사용자 입력 ---
+
+# 사용자 입력
+st.markdown("#### This tool tells how a macro topic affects an industry in a country, explained in your preferred language.")
 topic = st.text_input("Macro Topic - Type a macro topic and press Enter (ex, Inflation)", value="Inflation")
 industry = st.text_input("Industry or Sector - Type an industry/sector and press Enter (ex, Supply Chain)", value="Supply Chain")
-# Industry-specific tone option
+
 st.markdown("#### Optional - pro mode: if checked, the output should use more technical, domain-specific language tailored for professionals.")
 is_pro = st.checkbox("Pro mode (I know this industry well)")
+
 country = st.text_input("Country - Type a country and press Enter (ex, Canada)", value="Canada")
 language = st.selectbox("Output Language", ["English", "한국어", "Español", "Chinese", "Hindi"])
 
-# --- 내부 분석자 입력 (개발자만 보게끔) ---
+# 내부 분석자 입력
 with st.expander("🔒 Internal Analyst Comment (Developer Only)", expanded=False):
     internal_comment = st.text_area("Enter your interpretation or analyst comment", height=100)
 
-# --- 사용자 분석&예측 입력 ---
+# 사용자 분석&예측 입력
 st.markdown("---")
 st.subheader("Add Your Interpretation and Forecast")
 st.markdown("Let us learn from you.")
+
 with st.expander("✍️ Submit Your Forecast", expanded=False):
     email = st.text_input("Your Email (e.g., jamie@wiserbond.com)")
     user_analysis = st.text_area("Your Interpretation")
@@ -51,27 +49,28 @@ if st.button("Submit"):
             if res.status_code == 200:
                 st.success("✅ Your input has been saved. Thank you!")
             else:
-                st.error("⚠️ Server responded with an error.")
+                try:
+                    error_detail = res.json()
+                except:
+                    error_detail = res.text
+                st.error(f"⚠️ Server responded with an error.\n\n{error_detail}")
         except Exception as e:
             st.error(f"❌ Error occurred while submitting: {e}")
 
-
-
-# --- 실행 ---
+# 보고서 생성 실행
 st.markdown("---")
 if st.button("Generate Report"):
     with st.spinner("Wiserbond is analyzing with AI..."):
         response = requests.post(
-            "https://wiserbond-synthesizerv3.onrender.com/generate_report",  # ✅ 배포용 주소
-  # FastAPI 서버 URL
+            "https://wiserbond-synthesizerv3.onrender.com/generate_report",
             json={
                 "topic": topic,
                 "industry": industry,
                 "country": country,
                 "language": language,
                 "internal_comment": internal_comment,
-                "user_forecast": user_forecast,     # ✅ 추가
-                "user_analysis": user_analysis,     # ✅ 추가
+                "user_forecast": user_forecast,
+                "user_analysis": user_analysis,
                 "is_pro": is_pro
             }
         )
@@ -94,4 +93,8 @@ if st.button("Generate Report"):
             st.subheader("Wiserbond Interpretation")
             st.write(result["interpretation"])
         else:
-            st.error("API Error: Could not generate report.")
+            try:
+                error_detail = response.json()
+            except:
+                error_detail = response.text
+            st.error(f"API Error: Could not generate report.\n\n{error_detail}")
