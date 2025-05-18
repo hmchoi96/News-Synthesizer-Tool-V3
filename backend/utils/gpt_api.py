@@ -1,12 +1,13 @@
+# File: backend/utils/gpt_api.py
 import os
 import openai
 
-# 1) 시스템 환경 변수에서 OPENAI_API_KEY 읽기
+# 시스템 환경 변수에서 API 키 읽기
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     raise ValueError("환경 변수 OPENAI_API_KEY가 설정되지 않았습니다.")
 
-# 2) OpenAI 클라이언트에 키 등록
+# OpenAI 클라이언트에 키 등록
 openai.api_key = OPENAI_API_KEY
 
 def call_gpt(prompt: str, model: str = "gpt-4o") -> str:
