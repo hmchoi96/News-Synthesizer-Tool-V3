@@ -12,17 +12,11 @@ app = FastAPI()
 # CORS 설정
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:8501",
-        "http://localhost:10000",
-        "https://wiserbond-streamlit.onrender.com",
-        "https://wiserbond-synthesizerv3.onrender.com",
-    ],
+    allow_origins=["*"],  # ← 임시 허용 (보안 없음)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 # 요청 데이터 스키마
 class ReportRequest(BaseModel):
     topic: str
