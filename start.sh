@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
+# File: start.sh
 
 # 1) FastAPI (main.py) 실행
-#    main.py 가 프로젝트 루트에 있을 때는 "main:app" 으로 호출합니다.
 uvicorn main:app \
   --host 0.0.0.0 \
   --port 8000 &
