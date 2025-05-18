@@ -10,7 +10,7 @@ if not OPENAI_API_KEY:
 # OpenAI 클라이언트에 키 등록
 openai.api_key = OPENAI_API_KEY
 
-def call_gpt(prompt: str, model: str = "gpt-4o") -> str:
+def call_gpt(prompt: str, model: str = "gpt-4") -> str:
     """
     GPT 모델에 프롬프트를 보내고 응답 텍스트를 반환합니다.
     예외 발생 시 로그를 출력하고 예외를 다시 raise 합니다.
